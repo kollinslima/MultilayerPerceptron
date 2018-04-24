@@ -10,13 +10,13 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = [1]
+neurons_hidden = [48]
 funct_activation = ['relu', 'relu']
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 1
+epochs_number = 64
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -79,53 +79,41 @@ validation_data = (validation_data - train_min)/train_max
 test_data = (test_data - train_min)/train_max
 
 #####################CREATE MLP############################
-loss_train = []
-loss_validation = []
-acc_train = []
-acc_validation = []
+mlp = Sequential()
 
-for i in range(1,64):
-    neurons_hidden[0] = i
+#First Layer and Input
+mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer], input_dim=number_input))
 
-    mlp = Sequential()
+#All other layers
+for index_layer in range(1, hidden_layers):
+    mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer]))
 
-    #First Layer and Input
-    mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer], input_dim=number_input))
+#Output Layer
+mlp.add(Dense(number_classes, activation=funct_activation[++index_layer]))
 
-    #All other layers
-    for index_layer in range(1, hidden_layers):
-        mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer]))
+net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
-    #Output Layer
-    mlp.add(Dense(number_classes, activation=funct_activation[++index_layer]))
+mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
 
-    net_optimizer = optimizers.RMSprop(lr=learning_rate)
-
-    mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
-
-    history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
-
-    loss_train.append(history.history['loss'])
-    loss_validation.append(history.history['val_loss'])
-    acc_train.append(history.history['acc'])
-    acc_validation.append(history.history['val_acc'])
+history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
 plt.figure(figsize=[8,6])
-plt.plot(loss_train, 'r')
-plt.plot(loss_validation, 'b')
+plt.xlim(xmax=64)
+plt.plot(history.history['loss'], 'r')
+plt.plot(history.history['val_loss'], 'b')
 plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Epochs',fontsize=16)
 plt.ylabel('Loss',fontsize=16)
 plt.title('Loss Curves',fontsize=16)
-plt.savefig('Loss_oneHidden.png')
+plt.savefig('Loss_epochs.png')
 plt.close()
 
 plt.figure(figsize=[8,6])
-plt.plot(acc_train)
-plt.plot(acc_validation)
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
 plt.legend(['Training accuracy', 'Validation accuracy'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Epochs',fontsize=16)
 plt.ylabel('Accuracy',fontsize=16)
 plt.title('Accuracy Curves',fontsize=16)
-plt.savefig('Accuracy_oneHidden.png')
+plt.savefig('Accuracy_epochs.png')
 plt.close()
