@@ -5,6 +5,7 @@ from keras import optimizers
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
+import math
 
 number_input = 64
 number_classes = 10
@@ -84,6 +85,8 @@ loss_validation = []
 acc_train = []
 acc_validation = []
 
+max_layer = 0
+optimal_layer = 1
 for i in range(1,64):
     neurons_hidden[0] = i
 
@@ -109,6 +112,13 @@ for i in range(1,64):
     loss_validation.append(history.history['val_loss'])
     acc_train.append(history.history['acc'])
     acc_validation.append(history.history['val_acc'])
+    
+    if not (math.isnan(acc_validation[-1][0]) or math.isnan(loss_validation[-1][0])):
+        if (acc_validation[-1][0]/loss_validation[-1][0]) > max_layer:
+            max_layer = (acc_validation[-1][0]/loss_validation[-1][0])
+            optimal_layer = i
+
+print("Max_layer: {}, Optimal: {}".format(max_layer, optimal_layer))
 
 plt.figure(figsize=[8,6])
 plt.plot(loss_train, 'r')
