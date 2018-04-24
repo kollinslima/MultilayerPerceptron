@@ -8,15 +8,15 @@ import matplotlib.pyplot as plt
 
 number_input = 64
 number_classes = 10
-hidden_layers = 30
+hidden_layers = 25
 index_layer = 0
-neurons_hidden = 48
+neurons_hidden = 50
 funct_activation = 'relu'
 
-learning_rate = 0.0001
+learning_rate = 0.001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 20
+epochs_number = 18
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -84,6 +84,8 @@ loss_validation = []
 acc_test = []
 acc_validation = []
 
+x_axis = []
+
 while learning_rate <= 1:
     mlp = Sequential()
 
@@ -108,16 +110,14 @@ while learning_rate <= 1:
     acc_test.append(history.history['acc'][-1])
     acc_validation.append(history.history['val_acc'][-1])
 
+    x_axis.append(learning_rate);
     learning_rate = learning_rate * 2
 
-print(loss_test)
-print(loss_validation)
-print(acc_test)
-print(acc_validation)
 plt.figure(figsize=[8,6])
 plt.xlim(xmin=0.0001,xmax=1)
-plt.semilogx(loss_test, 'r')
-plt.semilogx(loss_validation, 'b')
+plt.xscale('log')
+plt.plot(x_axis,loss_test, 'r')
+plt.plot(x_axis,loss_validation, 'b')
 plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
 plt.xlabel('Learning Rate',fontsize=16)
 plt.ylabel('Loss',fontsize=16)
@@ -127,11 +127,13 @@ plt.close()
 
 plt.figure(figsize=[8,6])
 plt.xlim(xmin=0.0001,xmax=1)
-plt.semilogx(acc_test, 'r')
-plt.semilogx(acc_validation, 'b')
+plt.xscale('log')
+plt.plot(x_axis,acc_test)
+plt.plot(x_axis,acc_validation)
 plt.legend(['Training accuracy', 'Validation accuracy'],fontsize=18)
 plt.xlabel('Learning Rate',fontsize=16)
 plt.ylabel('Accuracy',fontsize=16)
 plt.title('Accuracy Curves',fontsize=16)
 plt.savefig('Accuracy_learning.png')
 plt.close()
+

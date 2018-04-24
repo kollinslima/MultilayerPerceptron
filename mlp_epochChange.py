@@ -5,13 +5,14 @@ from keras import optimizers
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
+import math
 
 number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = [48]
-funct_activation = ['relu', 'relu']
+neurons_hidden = 44
+funct_activation = 'relu'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
@@ -82,14 +83,14 @@ test_data = (test_data - train_min)/train_max
 mlp = Sequential()
 
 #First Layer and Input
-mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer], input_dim=number_input))
+mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
 
 #All other layers
 for index_layer in range(1, hidden_layers):
-    mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer]))
+    mlp.add(Dense(neurons_hidden, activation=funct_activation))
 
 #Output Layer
-mlp.add(Dense(number_classes, activation=funct_activation[++index_layer]))
+mlp.add(Dense(number_classes, activation=funct_activation))
 
 net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
@@ -97,6 +98,17 @@ mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
 
 history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
+max_value = 0
+max_epoch = 0
+
+for i in range(0,len(history.history['val_loss'])):
+    if math.isnan(history.history['val_acc'][i]) or math.isnan(history.history['val_loss'][i]):
+        continue
+    if (history.history['val_acc'][i]/history.history['val_loss'][i]) > max_value:
+        max_value = (history.history['val_acc'][i]/history.history['val_loss'][i]) 
+        max_epoch = i+1
+
+print("Max Epoch: {}".format(max_epoch))
 plt.figure(figsize=[8,6])
 plt.xlim(xmax=64)
 plt.plot(history.history['loss'], 'r')

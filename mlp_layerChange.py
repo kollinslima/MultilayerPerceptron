@@ -5,18 +5,19 @@ from keras import optimizers
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
+import math
 
 number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 48
+neurons_hidden = 44
 funct_activation = 'relu'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 20
+epochs_number = 26
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -84,6 +85,8 @@ loss_validation = []
 acc_test = []
 acc_validation = []
 
+max_value = 0
+max_layer = 0
 for hidden_layers in range(1,64):
     mlp = Sequential()
 
@@ -108,6 +111,14 @@ for hidden_layers in range(1,64):
     acc_test.append(history.history['acc'][-1])
     acc_validation.append(history.history['val_acc'][-1])
 
+    if math.isnan(acc_validation[-1]) or math.isnan(loss_validation[-1]):
+        continue
+
+    if (acc_validation[-1]/loss_validation[-1]) > max_value:
+        max_value = (acc_validation[-1]/loss_validation[-1])
+        max_layer = hidden_layers
+
+print("Max Layer: {}".format(max_layer))
 plt.figure(figsize=[8,6])
 plt.xlim(xmax=64)
 plt.plot(loss_test, 'r')

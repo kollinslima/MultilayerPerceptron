@@ -11,8 +11,8 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = [1]
-funct_activation = ['relu', 'relu']
+neurons_hidden = 1
+funct_activation = 'relu'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
@@ -85,22 +85,23 @@ loss_validation = []
 acc_train = []
 acc_validation = []
 
-max_layer = 0
-optimal_layer = 1
+max_value = 0;
+max_layer = 1;
+
 for i in range(1,64):
-    neurons_hidden[0] = i
+    neurons_hidden = i
 
     mlp = Sequential()
 
     #First Layer and Input
-    mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer], input_dim=number_input))
+    mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
 
     #All other layers
     for index_layer in range(1, hidden_layers):
-        mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer]))
+        mlp.add(Dense(neurons_hidden, activation=funct_activation))
 
     #Output Layer
-    mlp.add(Dense(number_classes, activation=funct_activation[++index_layer]))
+    mlp.add(Dense(number_classes, activation=funct_activation))
 
     net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
@@ -108,12 +109,20 @@ for i in range(1,64):
 
     history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
-    loss_train.append(history.history['loss'])
-    loss_validation.append(history.history['val_loss'])
-    acc_train.append(history.history['acc'])
-    acc_validation.append(history.history['val_acc'])
+    loss_train.append(history.history['loss'][-1])
+    loss_validation.append(history.history['val_loss'][-1])
+    acc_train.append(history.history['acc'][-1])
+    acc_validation.append(history.history['val_acc'][-1])
+
+    if math.isnan(acc_validation[-1]) or math.isnan(loss_validation[-1]):
+        continue
+
+    if (acc_validation[-1]/loss_validation[-1]) > max_value:
+        max_value = (acc_validation[-1]/loss_validation[-1])
+        max_layer = i
     
 
+print("Max Layer: {}".format(max_layer))
 plt.figure(figsize=[8,6])
 plt.plot(loss_train, 'r')
 plt.plot(loss_validation, 'b')
