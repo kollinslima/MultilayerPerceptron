@@ -5,19 +5,18 @@ from keras import optimizers
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
-import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 1
+hidden_layers = 30
 index_layer = 0
-neurons_hidden = [1]
-funct_activation = ['relu', 'relu']
+neurons_hidden = 48
+funct_activation = 'relu'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 1
+epochs_number = 20
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -80,27 +79,23 @@ validation_data = (validation_data - train_min)/train_max
 test_data = (test_data - train_min)/train_max
 
 #####################CREATE MLP############################
-loss_train = []
+loss_test = []
 loss_validation = []
-acc_train = []
+acc_test = []
 acc_validation = []
 
-max_layer = 0
-optimal_layer = 1
-for i in range(1,64):
-    neurons_hidden[0] = i
-
+while learning_rate <= 1:
     mlp = Sequential()
 
     #First Layer and Input
-    mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer], input_dim=number_input))
+    mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
 
     #All other layers
     for index_layer in range(1, hidden_layers):
-        mlp.add(Dense(neurons_hidden[index_layer], activation=funct_activation[index_layer]))
+        mlp.add(Dense(neurons_hidden, activation=funct_activation))
 
     #Output Layer
-    mlp.add(Dense(number_classes, activation=funct_activation[++index_layer]))
+    mlp.add(Dense(number_classes, activation=funct_activation))
 
     net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
@@ -108,34 +103,35 @@ for i in range(1,64):
 
     history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
-    loss_train.append(history.history['loss'])
-    loss_validation.append(history.history['val_loss'])
-    acc_train.append(history.history['acc'])
-    acc_validation.append(history.history['val_acc'])
-    
-    if not (math.isnan(acc_validation[-1][0]) or math.isnan(loss_validation[-1][0])):
-        if (acc_validation[-1][0]/loss_validation[-1][0]) > max_layer:
-            max_layer = (acc_validation[-1][0]/loss_validation[-1][0])
-            optimal_layer = i
+    loss_test.append(history.history['loss'][-1])
+    loss_validation.append(history.history['val_loss'][-1])
+    acc_test.append(history.history['acc'][-1])
+    acc_validation.append(history.history['val_acc'][-1])
 
-print("Max_layer: {}, Optimal: {}".format(max_layer, optimal_layer))
+    learning_rate = learning_rate * 2
 
+print(loss_test)
+print(loss_validation)
+print(acc_test)
+print(acc_validation)
 plt.figure(figsize=[8,6])
-plt.plot(loss_train, 'r')
-plt.plot(loss_validation, 'b')
+plt.xlim(xmin=0.0001,xmax=1)
+plt.semilogx(loss_test, 'r')
+plt.semilogx(loss_validation, 'b')
 plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Learning Rate',fontsize=16)
 plt.ylabel('Loss',fontsize=16)
 plt.title('Loss Curves',fontsize=16)
-plt.savefig('Loss_oneHidden.png')
+plt.savefig('Loss_learning.png')
 plt.close()
 
 plt.figure(figsize=[8,6])
-plt.plot(acc_train)
-plt.plot(acc_validation)
+plt.xlim(xmin=0.0001,xmax=1)
+plt.semilogx(acc_test, 'r')
+plt.semilogx(acc_validation, 'b')
 plt.legend(['Training accuracy', 'Validation accuracy'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Learning Rate',fontsize=16)
 plt.ylabel('Accuracy',fontsize=16)
 plt.title('Accuracy Curves',fontsize=16)
-plt.savefig('Accuracy_oneHidden.png')
+plt.savefig('Accuracy_learning.png')
 plt.close()
