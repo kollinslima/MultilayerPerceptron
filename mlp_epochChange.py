@@ -9,12 +9,12 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 1
+hidden_layers = 22
 index_layer = 0
-neurons_hidden = 44
+neurons_hidden = 40
 funct_activation = 'relu'
 
-learning_rate = 0.0001
+learning_rate = 0.001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 64
