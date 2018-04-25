@@ -11,7 +11,7 @@ number_input = 64
 number_classes = 10
 hidden_layers = 22
 index_layer = 0
-neurons_hidden = 1
+neurons_hidden = 44
 funct_activation = 'relu'
 
 learning_rate = 0.001
@@ -80,65 +80,24 @@ validation_data = (validation_data - train_min)/train_max
 test_data = (test_data - train_min)/train_max
 
 #####################CREATE MLP############################
-loss_train = []
-loss_validation = []
-acc_train = []
-acc_validation = []
+mlp = Sequential()
 
-max_value = 0;
-max_layer = 1;
+#First Layer and Input
+mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
 
-for i in range(1,64):
-    neurons_hidden = i
+#All other layers
+for index_layer in range(1, hidden_layers):
+    mlp.add(Dense(neurons_hidden, activation=funct_activation))
 
-    mlp = Sequential()
+#Output Layer
+mlp.add(Dense(number_classes, activation=funct_activation))
 
-    #First Layer and Input
-    mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
+net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
-    #All other layers
-    for index_layer in range(1, hidden_layers):
-        mlp.add(Dense(neurons_hidden, activation=funct_activation))
+mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
 
-    #Output Layer
-    mlp.add(Dense(number_classes, activation=funct_activation))
+history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
-    net_optimizer = optimizers.RMSprop(lr=learning_rate)
+[test_loss, test_acc] = mlp.evaluate(test_data, test_label_one_hot)
+print("Evaluation result on Test Data : Loss = {}, accuracy = {}".format(test_loss, test_acc))
 
-    mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
-
-    history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
-
-    loss_train.append(history.history['loss'][-1])
-    loss_validation.append(history.history['val_loss'][-1])
-    acc_train.append(history.history['acc'][-1])
-    acc_validation.append(history.history['val_acc'][-1])
-
-    if math.isnan(acc_validation[-1]) or math.isnan(loss_validation[-1]):
-        continue
-
-    if (acc_validation[-1]/loss_validation[-1]) > max_value:
-        max_value = (acc_validation[-1]/loss_validation[-1])
-        max_layer = i
-    
-
-print("Max Layer: {}".format(max_layer))
-plt.figure(figsize=[8,6])
-plt.plot(loss_train, 'r')
-plt.plot(loss_validation, 'b')
-plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
-plt.ylabel('Loss',fontsize=16)
-plt.title('Loss Curves',fontsize=16)
-plt.savefig('Loss_oneHidden.png')
-plt.close()
-
-plt.figure(figsize=[8,6])
-plt.plot(acc_train)
-plt.plot(acc_validation)
-plt.legend(['Training accuracy', 'Validation accuracy'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
-plt.ylabel('Accuracy',fontsize=16)
-plt.title('Accuracy Curves',fontsize=16)
-plt.savefig('Accuracy_oneHidden.png')
-plt.close()
