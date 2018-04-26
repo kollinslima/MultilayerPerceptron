@@ -2,6 +2,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import to_categorical
 from keras import optimizers
+from keras import initializers
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
@@ -13,6 +14,10 @@ hidden_layers = 24
 index_layer = 0
 neurons_hidden = 60
 funct_activation = 'relu'
+funct_activation_output = 'softmax'
+
+initializer_kernel=initializers.random_uniform()
+initializer_bias='ones'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
@@ -75,9 +80,13 @@ test_label_one_hot = to_categorical(test_label)
 train_min = np.amin(train_data)
 train_max = np.amax(train_data)
 
-train_data = (train_data - train_min)/train_max
-validation_data = (validation_data - train_min)/train_max
-test_data = (test_data - train_min)/train_max
+'''
+Normalization between a and b
+x = (b - a)(x - min)/(max - min) + a
+'''
+train_data = (2*((train_data - train_min)/(train_max - train_min))) - 1
+validation_data = (2*((validation_data - train_min)/(train_max - train_min))) - 1
+test_data = (2*((test_data - train_min)/(train_max - train_min))) - 1
 
 #####################CREATE MLP############################
 loss_test = []
@@ -89,19 +98,29 @@ x_axis = []
 
 max_value = 0;
 max_lr = 0;
-while learning_rate <= 0.01:
+while learning_rate <= 1:
     mlp = Sequential()
 
     #First Layer and Input
-    mlp.add(Dense(neurons_hidden, activation=funct_activation, input_dim=number_input))
+    mlp.add(Dense(neurons_hidden, 
+        kernel_initializer=initializer_kernel, 
+        bias_initializer=initializer_bias,
+        activation=funct_activation, 
+        input_dim=number_input))
 
     #All other layers
     for index_layer in range(1, hidden_layers):
-        mlp.add(Dense(neurons_hidden, activation=funct_activation))
+        mlp.add(Dense(neurons_hidden, 
+            kernel_initializer=initializer_kernel, 
+            bias_initializer=initializer_bias,
+            activation=funct_activation))
 
     #Output Layer
-    mlp.add(Dense(number_classes, activation=funct_activation))
-
+    mlp.add(Dense(number_classes,
+        kernel_initializer=initializer_kernel,
+        bias_initializer=initializer_bias,
+        activation=funct_activation_output))
+   
     net_optimizer = optimizers.RMSprop(lr=learning_rate)
 
     mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
@@ -122,7 +141,7 @@ while learning_rate <= 0.01:
         max_value = acc_validation[-1]
         max_lr = learning_rate;
 
-    learning_rate = learning_rate * 1.2
+    learning_rate = learning_rate * 1.5
 
 print("Max LR: {}".format(max_lr))
 plt.figure(figsize=[8,6])
