@@ -9,7 +9,7 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 22
+hidden_layers = 24
 index_layer = 0
 neurons_hidden = 1
 funct_activation = 'relu'

@@ -9,9 +9,9 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 22
+hidden_layers = 24
 index_layer = 0
-neurons_hidden = 42
+neurons_hidden = 60
 funct_activation = 'relu'
 
 learning_rate = 0.0001
@@ -89,7 +89,7 @@ x_axis = []
 
 max_value = 0;
 max_lr = 0;
-while learning_rate <= 1:
+while learning_rate <= 0.01:
     mlp = Sequential()
 
     #First Layer and Input
@@ -122,7 +122,7 @@ while learning_rate <= 1:
         max_value = (acc_validation[-1]/loss_validation[-1])
         max_lr = learning_rate;
 
-    learning_rate = learning_rate * 1.5
+    learning_rate = learning_rate * 1.2
 
 print("Max LR: {}".format(max_lr))
 plt.figure(figsize=[8,6])
