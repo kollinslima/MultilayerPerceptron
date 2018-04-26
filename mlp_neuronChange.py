@@ -14,10 +14,10 @@ index_layer = 0
 neurons_hidden = 1
 funct_activation = 'relu'
 
-learning_rate = 0.001
+learning_rate = 0.0005
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 26
+epochs_number = 17
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################

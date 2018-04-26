@@ -11,10 +11,10 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 40
+neurons_hidden = 60
 funct_activation = 'relu'
 
-learning_rate = 0.001
+learning_rate = 0.0005
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 17
