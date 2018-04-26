@@ -9,12 +9,12 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 22
+hidden_layers = 1
 index_layer = 0
 neurons_hidden = 60
 funct_activation = 'relu'
 
-learning_rate = 0.0005
+learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 64
@@ -104,8 +104,8 @@ max_epoch = 0
 for i in range(0,len(history.history['val_loss'])):
     if math.isnan(history.history['val_acc'][i]) or math.isnan(history.history['val_loss'][i]):
         continue
-    if (history.history['val_acc'][i]/history.history['val_loss'][i]) > max_value:
-        max_value = (history.history['val_acc'][i]/history.history['val_loss'][i]) 
+    if history.history['val_acc'][i] > max_value:
+        max_value = history.history['val_acc'][i]
         max_epoch = i+1
 
 print("Max Epoch: {}".format(max_epoch))

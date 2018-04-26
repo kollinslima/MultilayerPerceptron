@@ -9,9 +9,9 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 22
+hidden_layers = 24
 index_layer = 0
-neurons_hidden = 42
+neurons_hidden = 60
 funct_activation = 'relu'
 
 learning_rate = 0.0005

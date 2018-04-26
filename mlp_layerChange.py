@@ -14,7 +14,7 @@ index_layer = 0
 neurons_hidden = 60
 funct_activation = 'relu'
 
-learning_rate = 0.0005
+learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 17
@@ -114,8 +114,8 @@ for hidden_layers in range(1,64):
     if math.isnan(acc_validation[-1]) or math.isnan(loss_validation[-1]):
         continue
 
-    if (acc_validation[-1]/loss_validation[-1]) > max_value:
-        max_value = (acc_validation[-1]/loss_validation[-1])
+    if acc_validation[-1] > max_value:
+        max_value = acc_validation[-1]
         max_layer = hidden_layers
 
 print("Max Layer: {}".format(max_layer))

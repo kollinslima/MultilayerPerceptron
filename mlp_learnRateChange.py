@@ -118,8 +118,8 @@ while learning_rate <= 0.01:
     if math.isnan(acc_validation[-1]) or math.isnan(loss_validation[-1]):
         continue
 
-    if (acc_validation[-1]/loss_validation[-1]) > max_value:
-        max_value = (acc_validation[-1]/loss_validation[-1])
+    if acc_validation[-1] > max_value:
+        max_value = acc_validation[-1]
         max_lr = learning_rate;
 
     learning_rate = learning_rate * 1.2
