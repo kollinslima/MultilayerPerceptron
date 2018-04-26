@@ -11,13 +11,13 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 60
+neurons_hidden = 46
 funct_activation = 'relu'
 
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 17
+epochs_number = 24
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
