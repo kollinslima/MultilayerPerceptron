@@ -19,10 +19,10 @@ funct_activation_output = 'softmax'
 initializer_kernel=initializers.random_uniform()
 initializer_bias='ones'
 
-learning_rate = 0.0001
+learning_rate = 0.0229
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 1
+epochs_number = 3
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################

@@ -10,9 +10,9 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 24
+hidden_layers = 1
 index_layer = 0
-neurons_hidden = 60
+neurons_hidden = 53
 funct_activation = 'relu'
 funct_activation_output = 'softmax'
 
@@ -22,7 +22,7 @@ initializer_bias='ones'
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 17
+epochs_number = 3
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -141,7 +141,7 @@ while learning_rate <= 1:
         max_value = acc_validation[-1]
         max_lr = learning_rate;
 
-    learning_rate = learning_rate * 1.5
+    learning_rate = learning_rate * 1.1
 
 print("Max LR: {}".format(max_lr))
 plt.figure(figsize=[8,6])

@@ -12,14 +12,14 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 51
+neurons_hidden = 53
 funct_activation = 'relu'
 funct_activation_output = 'softmax'
 
 initializer_kernel=initializers.random_uniform()
 initializer_bias='ones'
 
-learning_rate = 0.0001
+learning_rate = 0.0107
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 100
