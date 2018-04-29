@@ -12,7 +12,7 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 53
+neurons_hidden = 61
 funct_activation = 'relu'
 funct_activation_output = 'softmax'
 

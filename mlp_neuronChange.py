@@ -19,7 +19,7 @@ funct_activation_output = 'softmax'
 initializer_kernel=initializers.random_uniform()
 initializer_bias='ones'
 
-learning_rate = 0.0229
+learning_rate = 0.0055
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
 epochs_number = 3
