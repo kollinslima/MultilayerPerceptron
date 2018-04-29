@@ -12,17 +12,17 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 61
+neurons_hidden = 53
 funct_activation = 'relu'
 funct_activation_output = 'softmax'
 
 initializer_kernel=initializers.random_uniform()
 initializer_bias='ones'
 
-learning_rate = 0.0171
+learning_rate = 0.0055
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 2
+epochs_number = 3
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -117,6 +117,22 @@ mlp.compile(optimizer=net_optimizer, loss=loss_function, metrics=net_metrics)
 
 history = mlp.fit(train_data, train_label_one_hot,epochs=epochs_number, verbose=1,validation_data=(validation_data, validation_label_one_hot))
 
-[test_loss, test_acc] = mlp.evaluate(test_data, test_label_one_hot)
-print("Evaluation result on Test Data : Loss = {}, accuracy = {}".format(test_loss, test_acc))
+#[test_loss, test_acc] = mlp.evaluate(test_data, test_label_one_hot)
+#print("Evaluation result on Test Data : Loss = {}, accuracy = {}".format(test_loss, test_acc))
+
+prediction = mlp.predict_classes(test_data, verbose=1)
+prediction = prediction.reshape(-1,1)
+
+#Confusion Matrix
+confusion_matrix = [0] * number_classes
+for i in range(number_classes):
+    confusion_matrix[i] = [0] * number_classes
+
+for i in range(prediction.shape[0]):
+    test_index = int(test_label[i])
+    prediction_index = int(prediction[i])
+    confusion_matrix[prediction_index][test_index] += 1
+
+for i in range(number_classes):
+    print(confusion_matrix[i])
 

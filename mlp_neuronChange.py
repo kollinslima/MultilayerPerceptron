@@ -10,7 +10,7 @@ import math
 
 number_input = 64
 number_classes = 10
-hidden_layers = 1
+hidden_layers = 2
 index_layer = 0
 neurons_hidden = 1
 funct_activation = 'relu'
@@ -19,10 +19,10 @@ funct_activation_output = 'softmax'
 initializer_kernel=initializers.random_uniform()
 initializer_bias='ones'
 
-learning_rate = 0.0055
+learning_rate = 0.005
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 3
+epochs_number = 4
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
@@ -146,18 +146,18 @@ plt.figure(figsize=[8,6])
 plt.plot(loss_train, 'r')
 plt.plot(loss_validation, 'b')
 plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Number of neurons',fontsize=16)
 plt.ylabel('Loss',fontsize=16)
 plt.title('Loss Curves',fontsize=16)
-plt.savefig('Loss_oneHidden.png')
+plt.savefig('Loss_neuronChange.png')
 plt.close()
 
 plt.figure(figsize=[8,6])
 plt.plot(acc_train)
 plt.plot(acc_validation)
 plt.legend(['Training accuracy', 'Validation accuracy'],fontsize=18)
-plt.xlabel('Number of neurons (one hidden layer)',fontsize=16)
+plt.xlabel('Number of neurons',fontsize=16)
 plt.ylabel('Accuracy',fontsize=16)
 plt.title('Accuracy Curves',fontsize=16)
-plt.savefig('Accuracy_oneHidden.png')
+plt.savefig('Accuracy_neuronChange.png')
 plt.close()

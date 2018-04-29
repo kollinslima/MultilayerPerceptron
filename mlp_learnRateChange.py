@@ -12,7 +12,7 @@ number_input = 64
 number_classes = 10
 hidden_layers = 1
 index_layer = 0
-neurons_hidden = 61
+neurons_hidden = 53
 funct_activation = 'relu'
 funct_activation_output = 'softmax'
 
@@ -22,7 +22,7 @@ initializer_bias='ones'
 learning_rate = 0.0001
 loss_function = 'categorical_crossentropy'
 net_metrics = ['accuracy']
-epochs_number = 3
+epochs_number = 4
 
 validation_split = 3
 ##################READ DATABASE - TRAIN#####################
